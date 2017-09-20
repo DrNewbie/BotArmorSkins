@@ -160,6 +160,25 @@ Hooks:PostHook(MenuSceneManager, "set_henchmen_loadout", "BotArmorSkins__MenuSce
 	]]
 end)
 
+Hooks:PostHook(BotWeapons, "set_armor", "BotArmorSkins__BotWeapons_set_armor", function(self, unit, ...)
+	if not BotArmorSkins.Skins_List or not managers.criminals or managers.menu_scene then
+		return
+	end
+	local loadout = managers.criminals:get_loadout_for(unit:base()._tweak_table)
+	if not loadout or (not loadout.armor_skins and not loadout.armor_skins_random) then
+		
+	elseif loadout.armor_skins_random then
+		local Get_This_Skins = tostring(BotArmorSkins.Skins_List[math.random(#BotArmorSkins.Skins_List)])
+		unit:base()._armor_skin:set_cosmetics_data(Get_This_Skins, true)
+		unit:base()._armor_skin:_apply_cosmetics()
+		unit:base()._armor_skin._request_update = nil
+	elseif loadout.armor_skins and not loadout.armor_skins_random then
+		unit:base()._armor_skin:set_cosmetics_data(loadout.armor_skins, true)
+		unit:base()._armor_skin:_apply_cosmetics()
+		unit:base()._armor_skin._request_update = nil
+	end
+end)
+
 Hooks:Add("LocalizationManagerPostInit", "BotArmorSkins_loc", function(loc)
 	LocalizationManager:add_localized_strings({
 		["menu_action_select_armor_skins_name"] = "Select Armor Skins",
