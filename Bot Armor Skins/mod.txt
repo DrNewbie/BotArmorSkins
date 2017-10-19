@@ -3,7 +3,7 @@
 	"description" : "Bot Armor Skins",
 	"author" : "Dr_Newbie",
 	"contact": "http://modwork.shop/20918",
-	"version": "12",
+	"version": "13",
 	"blt_version" : 2,
 	"priority" : 1,
 	"updates": [
