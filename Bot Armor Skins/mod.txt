@@ -3,14 +3,14 @@
 	"description" : "Bot Armor Skins",
 	"author" : "Dr_Newbie",
 	"contact": "http://modwork.shop/20918",
-	"version": "11",
+	"version": "12",
 	"blt_version" : 2,
 	"priority" : 1,
 	"updates": [
 		{
 			"identifier" : "20918"
 		}
-	]
+	],
 	"hooks" : [
 		{ "hook_id" : "lib/managers/localizationmanager", "script_path" : "Updater.lua" },
 		{ "hook_id" : "lib/managers/blackmarketmanager", "script_path" : "Function.lua" },

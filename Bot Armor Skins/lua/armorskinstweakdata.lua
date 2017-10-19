@@ -14,6 +14,10 @@ Hooks:PostHook(EconomyTweakData, "_init_armor_skins", "BotArmorSkins__EconomyTwe
 			table.insert(_skins_list, skin_name)
 		end
 	end
-	_file:write(json.encode(_skins_list))
+	if #_skins_list > 0 then
+		_file:write(json.encode(_skins_list))
+	else
+		_file:write('[{}]')
+	end
 	_file:close()
 end)

@@ -151,13 +151,6 @@ Hooks:PostHook(MenuSceneManager, "set_henchmen_loadout", "BotArmorSkins__MenuSce
 		end
 		return
 	end
-	--[[
-	if unit:base()._armor_skin.set_cosmetics_data then
-		unit:base()._armor_skin:set_cosmetics_data(Get_This_Skins, true)
-		unit:base()._armor_skin:_apply_cosmetics()
-		unit:base()._armor_skin._request_update = nil
-	end
-	]]
 end)
 
 Hooks:PostHook(BotWeapons, "set_armor", "BotArmorSkins__BotWeapons_set_armor", function(self, unit, ...)
