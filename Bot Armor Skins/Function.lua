@@ -74,6 +74,9 @@ function BotArmorSkins:Overrides(them, key, value)
 		local _file = io.open("mods/Bot Weapons/lua/crewmanagementgui.lua", "r")
 		if _file then
 			local _data = tostring(_file:read("*all"))
+			if not _data:find('_G.BotArmorSkins') then
+				_data = '_G.BotArmorSkins = _G.BotArmorSkins or {} \n ' .. _data
+			end
 			if _data:find('self:open_armor_category_menu') then
 				_data = _data:gsub('self:open_armor_category_menu%(henchman_index%)', 'BotArmorSkins:Overrides(self, "open_armor_category_menu", henchman_index)')
 				_file:close()
