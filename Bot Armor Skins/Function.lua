@@ -9,6 +9,14 @@ if not BotWeapons then
 	return
 end
 
+Hooks:Add("LocalizationManagerPostInit", "BotArmorSkins_loc", function(loc)
+	LocalizationManager:add_localized_strings({
+		["menu_action_select_armor_skins_name"] = "Select Armor Skins",
+		["menu_action_random_armor_skins_name"] = "Random Armor Skins",
+		["menu_action_unequip_armor_skins"] = "Unequip Armor Skins",
+	})
+end)
+
 _G.BotArmorSkins = _G.BotArmorSkins or {}
 BotArmorSkins.ModPath = ModPath
 BotArmorSkins.SaveFile = BotArmorSkins.SaveFile or SavePath .. "BotArmorSkins.txt"
@@ -69,73 +77,50 @@ function BotArmorSkins:Menu_Select_This_Armor_Skins(henchman_index, data)
 	end
 end
 
-function BotArmorSkins:Overrides(them, key, value)
-	if not them or not key then
-		local _file = io.open("mods/Bot Weapons/lua/crewmanagementgui.lua", "r")
-		if _file then
-			local _data = tostring(_file:read("*all"))
-			if not _data:find('_G.BotArmorSkins') then
-				_data = '_G.BotArmorSkins = _G.BotArmorSkins or {} \n ' .. _data
-			end
-			if _data:find('self:open_armor_category_menu') then
-				_data = _data:gsub('self:open_armor_category_menu%(henchman_index%)', 'BotArmorSkins:Overrides(self, "open_armor_category_menu", henchman_index)')
-				_file:close()
-				_file = io.open("mods/Bot Weapons/lua/crewmanagementgui.lua", "w+")
-				_file:write(_data)
-				_file:close()
-			else
-				_file:close()
-			end
-		end
-	end
-	if them and key then
-		if key == "open_armor_category_menu" then
-			them:open_armor_category_menu(value)
-			local menu_title = managers.localization:text("menu_action_select_name")
-			local menu_message = managers.localization:text("menu_action_select_desc")
-			local menu_options = {}
-			table.insert(menu_options,
-				{
-					text = managers.localization:text("menu_action_select_armor_skins_name"),
-					callback = function () 
-						self:Menu_Armor_Skins({henchman_index = value, them = them})
-						them:reload()
-					end
-				}
-			)
-			table.insert(menu_options, {})
-			table.insert(menu_options,
-				{
-					text = managers.localization:text("menu_action_random_armor_skins_name"),
-					callback = function () 
-						self:Menu_Armor_Skins({henchman_index = value, random = true})
-						them:reload()
-					end
-				}
-			)
-			table.insert(menu_options, {})
-			table.insert(menu_options,
-				{
-					text = managers.localization:text("menu_action_unequip_armor_skins"),
-					callback = function () 
-						self:Menu_Armor_Skins({henchman_index = value, unequip = true})
-						them:reload()
-					end
-				}
-			)
-			table.insert(menu_options, {})
-			table.insert(menu_options,
-				{
-					text = managers.localization:text("menu_back"),
-					is_cancel_button = true
-				}
-			)
-			QuickMenu:new(menu_title, menu_message, menu_options, true)
-		end
-	end
+if CrewManagementGui then
+	Hooks:PostHook(CrewManagementGui, "open_armor_category_menu", "BotArmorSkins:Overrides", function(them, value)
+		local menu_title = managers.localization:text("menu_action_select_name")
+		local menu_message = managers.localization:text("menu_action_select_desc")
+		local menu_options = {}
+		table.insert(menu_options,
+			{
+				text = managers.localization:text("menu_action_select_armor_skins_name"),
+				callback = function () 
+					BotArmorSkins:Menu_Armor_Skins({henchman_index = value, them = them})
+					them:reload()
+				end
+			}
+		)
+		table.insert(menu_options, {})
+		table.insert(menu_options,
+			{
+				text = managers.localization:text("menu_action_random_armor_skins_name"),
+				callback = function () 
+					BotArmorSkins:Menu_Armor_Skins({henchman_index = value, random = true})
+					them:reload()
+				end
+			}
+		)
+		table.insert(menu_options, {})
+		table.insert(menu_options,
+			{
+				text = managers.localization:text("menu_action_unequip_armor_skins"),
+				callback = function () 
+					BotArmorSkins:Menu_Armor_Skins({henchman_index = value, unequip = true})
+					them:reload()
+				end
+			}
+		)
+		table.insert(menu_options, {})
+		table.insert(menu_options,
+			{
+				text = managers.localization:text("menu_back"),
+				is_cancel_button = true
+			}
+		)
+		QuickMenu:new(menu_title, menu_message, menu_options, true)
+	end)
 end
-
-BotArmorSkins:Overrides()
 
 Hooks:PostHook(MenuSceneManager, "set_henchmen_loadout", "BotArmorSkins__MenuSceneManager_set_henchmen_loadout", function(self, index, character, loadout)
 	local unit = self._henchmen_characters[index]
@@ -173,12 +158,4 @@ Hooks:PostHook(BotWeapons, "set_armor", "BotArmorSkins__BotWeapons_set_armor", f
 		unit:base()._armor_skin:_apply_cosmetics()
 		unit:base()._armor_skin._request_update = nil
 	end
-end)
-
-Hooks:Add("LocalizationManagerPostInit", "BotArmorSkins_loc", function(loc)
-	LocalizationManager:add_localized_strings({
-		["menu_action_select_armor_skins_name"] = "Select Armor Skins",
-		["menu_action_random_armor_skins_name"] = "Random Armor Skins",
-		["menu_action_unequip_armor_skins"] = "Unequip Armor Skins",
-	})
 end)
