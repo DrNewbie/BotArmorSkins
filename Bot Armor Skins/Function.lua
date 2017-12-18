@@ -156,7 +156,6 @@ function BotArmorSkins:special_materials_fix(unit, character_id, data)
 		
 		if table.contains(cc_sequences, shared_char_seq) then
 			shared_char_seq = shared_char_seq .. "_cc"
-			log("shared_char_seq: "..shared_char_seq)
 		end
 	end
 		
