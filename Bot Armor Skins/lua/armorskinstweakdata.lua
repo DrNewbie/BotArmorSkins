@@ -15,6 +15,7 @@ Hooks:PostHook(EconomyTweakData, "_init_armor_skins", "BotArmorSkins__EconomyTwe
 		end
 	end
 	if #_skins_list > 0 then
+		BotArmorSkins.Skins_List = _skins_list
 		_file:write(json.encode(_skins_list))
 	else
 		_file:write('[{}]')
